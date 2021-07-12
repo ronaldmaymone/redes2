@@ -325,7 +325,12 @@ class Interface:
 
         print("t = {0:.9f}, nó {1}: Finalizando período de backoff para o pacote {2}".format(self.escalonador.getAgora(), self.no.getId(), self.pacoteAtual.getEstado('numeroDeSequencia')))
 
-        # TODO
+        # Verifica o meio para saber se alguém esta a utilizar, caso sim, inicia o backoff novamente
+        if self.MACVerificaMeioLivre():
+            self.transmitePacote()
+        # Do contrário transmita o pacote novamente
+        else:
+            self.MACInicializa(p)
         pass
 
     # Método que é chamado quando a última tentativa de transmissão realizada (iniciada 
