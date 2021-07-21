@@ -327,7 +327,7 @@ class Interface:
 
         # Verifica o meio para saber se está livre, caso sim, transmita o pacote
         if self.MACVerificaMeioLivre():
-            self.transmitePacote()
+            self.MACTransmitePacote(p)
         # Do contrário inicia o backoff novamente
         else:
             self.MACExecutaBackoff(self.escalonador.duracao)
