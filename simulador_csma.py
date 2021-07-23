@@ -30,6 +30,7 @@ import argparse
 # exemplo, o tamanho da janela de backoff), declare-o aqui como uma constante.
 
 
+
 # Classe escalonador
 class Escalonador:
 
