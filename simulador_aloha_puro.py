@@ -29,6 +29,8 @@ import argparse
 ##
 # TODO: se o protocolo de acesso ao meio implementado tiver algum parâmetro (por
 # exemplo, o tamanho da janela de backoff), declare-o aqui como uma constante.
+MAXIMUM_BACKOFF_WINDOW = 9
+
 
 # Classe escalonador
 class Escalonador:
@@ -327,7 +329,6 @@ class Interface:
                                                                                       self.no.getId(),
                                                                                       self.pacoteAtual.getEstado(
                                                                                           'numeroDeSequencia')))
-
         # TODO
         pass
 
@@ -344,7 +345,7 @@ class Interface:
                                                                                            self.pacoteAtual.getEstado(
                                                                                                'numeroDeSequencia')))
 
-        # TODO
+        self.MACTransmitePacote(p)
         pass
 
     # Método que é chamado quando a última tentativa de transmissão realizada (iniciada
@@ -357,7 +358,7 @@ class Interface:
         print("t = {0:.9f}, nó {1}: Finalizando tentativa de transmissao mal sucedida para o pacote {2}".format(
             self.escalonador.getAgora(), self.no.getId(), self.pacoteAtual.getEstado('numeroDeSequencia')))
 
-        # TODO
+        self.MACExecutaBackoff(1 + random.randrange(MAXIMUM_BACKOFF_WINDOW))
         pass
 
     # Método que é chamado quando a última tentativa de transmissão realizada (iniciada
