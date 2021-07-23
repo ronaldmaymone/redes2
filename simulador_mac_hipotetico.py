@@ -336,6 +336,7 @@ class Interface:
     # fazer a seguir (se alguma coisa).
     #
     # O único parâmetro do método, denominado p, é o pacote a ser transmitido.
+    #Mac Hipotético nao faz backoff
     def MACFinalizaBackoff(self, p):
 
         print(
@@ -356,6 +357,8 @@ class Interface:
 
         print("t = {0:.9f}, nó {1}: Finalizando tentativa de transmissao mal sucedida para o pacote {2}".format(
             self.escalonador.getAgora(), self.no.getId(), self.pacoteAtual.getEstado('numeroDeSequencia')))
+        # Protocolo apenas retransmite caso haja colisão
+        self.MACTransmitePacote(p)
 
         # TODO
         pass
