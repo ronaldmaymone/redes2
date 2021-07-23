@@ -30,6 +30,7 @@ import argparse
 # exemplo, o tamanho da janela de backoff), declare-o aqui como uma constante.
 
 
+
 # Classe escalonador
 class Escalonador:
 
@@ -325,7 +326,12 @@ class Interface:
 
         print("t = {0:.9f}, nó {1}: Finalizando período de backoff para o pacote {2}".format(self.escalonador.getAgora(), self.no.getId(), self.pacoteAtual.getEstado('numeroDeSequencia')))
 
-        # TODO
+        # Verifica o meio para saber se está livre, caso sim, transmita o pacote
+        if self.MACVerificaMeioLivre():
+            self.MACTransmitePacote(p)
+        # Do contrário inicia o backoff novamente
+        else:
+            self.MACExecutaBackoff(self.escalonador.duracao)
         pass
 
     # Método que é chamado quando a última tentativa de transmissão realizada (iniciada 
