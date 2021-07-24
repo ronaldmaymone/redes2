@@ -5,13 +5,13 @@ import heapq
 import random
 import gettext
 
-def traduzArgparse(s):
 
+def traduzArgparse(s):
     dicionario = {
-        'positional arguments':'Argumentos posicionais',
-        'optional arguments':'Argumentos opcionais',
-        'show this help message and exit':'exibe essa ajuda e sai',
-        'usage: ':'Uso: '}
+        'positional arguments': 'Argumentos posicionais',
+        'optional arguments': 'Argumentos opcionais',
+        'show this help message and exit': 'exibe essa ajuda e sai',
+        'usage: ': 'Uso: '}
 
     if s in dicionario:
         s = dicionario[s]
@@ -23,17 +23,17 @@ gettext.gettext = traduzArgparse
 
 import argparse
 
+
 # Parâmetros do protocolo de acesso ao meio (se algum)
 ###
 ##
 # TODO: se o protocolo de acesso ao meio implementado tiver algum parâmetro (por
 # exemplo, o tamanho da janela de backoff), declare-o aqui como uma constante.
 
-
 # Classe escalonador
 class Escalonador:
 
-    def __init__(self, duracao = 10):
+    def __init__(self, duracao=10):
         self.duracao = duracao
 
         # Heap para armazenar os eventos
@@ -49,7 +49,7 @@ class Escalonador:
     # a função callback será chamada com dado como argumento.
     def agendaEvento(self, t, callback, dado):
 
-        #print "Agendando evento para t = {0} com callback {1} e dado {2}".format(t, callback, dado)
+        # print "Agendando evento para t = {0} com callback {1} e dado {2}".format(t, callback, dado)
 
         ev = (callback, dado)
         heapq.heappush(self.eventos, (t, self.seq, ev))
@@ -64,14 +64,14 @@ class Escalonador:
     # seja alcançada.
     def executa(self):
 
-        while(len(self.eventos) and self.agora < self.duracao):
+        while (len(self.eventos) and self.agora < self.duracao):
 
             # Obtém próximo evento da lista atualiza tempo atual
             ev = heapq.heappop(self.eventos)
             self.agora = ev[0]
             ev = ev[2]
 
-            # Dispara a callback do evento, passando como argumentos o 
+            # Dispara a callback do evento, passando como argumentos o
             # dado do evento.
             cb = ev[0]
             dado = ev[1]
@@ -79,6 +79,7 @@ class Escalonador:
                 cb(dado)
             else:
                 cb()
+
 
 # Classe pacote (para guardar estado)
 class Pacote:
@@ -96,11 +97,12 @@ class Pacote:
             return self.estado[chave]
         else:
             return None
-    
+
+
 # Classe interface
 class Interface:
 
-    def __init__(self, no, barramento, escalonador, taxaDeTransmissao = 1e8):
+    def __init__(self, no, barramento, escalonador, taxaDeTransmissao=1e8):
 
         # Referências para outros objetos
         self.no = no
@@ -114,17 +116,17 @@ class Interface:
         self.sinaisRecebidos = []
 
         # Armazena o pacote atualmente em transmissão (se algum)
-        self.pacoteAtual = None 
+        self.pacoteAtual = None
 
         # Taxa de transmissão (em b/s)
         self.taxaDeTransmissao = taxaDeTransmissao
 
         # Dicionário para armazenar estatísticas sobre os pacotes que passam pela interface.
-        self.estatisticas = {'perdasPorColisao': 0, 
-                                'pacotesRecebidos': 0,
-                                'atrasoTotal': 0.0,
-                                'tempoUtilTotal': 0.0,
-                                'bytesRecebidos': 0}
+        self.estatisticas = {'perdasPorColisao': 0,
+                             'pacotesRecebidos': 0,
+                             'atrasoTotal': 0.0,
+                             'tempoUtilTotal': 0.0,
+                             'bytesRecebidos': 0}
 
     # Método que imprime um sumário das estatísticas de desempenho coletadas.
     def sumarizaEstatisticas(self):
@@ -134,17 +136,20 @@ class Interface:
 
         if self.estatisticas['perdasPorColisao'] + self.estatisticas['pacotesRecebidos'] > 0:
             print("Taxa de perda de pacotes por colisão: {:.6}%".format(
-                100.0 * self.estatisticas['perdasPorColisao'] / (self.estatisticas['perdasPorColisao'] + self.estatisticas['pacotesRecebidos'])))
+                100.0 * self.estatisticas['perdasPorColisao'] / (
+                            self.estatisticas['perdasPorColisao'] + self.estatisticas['pacotesRecebidos'])))
         else:
             print("Taxa de perda de pacotes por colisão: N/A")
 
-        print("Tempo total de uso do enlace com transmissões bem sucedidas: {}".format(self.estatisticas['tempoUtilTotal']))
+        print("Tempo total de uso do enlace com transmissões bem sucedidas: {}".format(
+            self.estatisticas['tempoUtilTotal']))
         print("Utilização do meio: {:.6%}".format(self.estatisticas['tempoUtilTotal'] / self.escalonador.getAgora()))
 
         print("Vazão: {:.2f} b/s".format(self.estatisticas['bytesRecebidos'] * 8.0 / self.escalonador.getAgora()))
 
         if self.estatisticas['pacotesRecebidos'] > 0:
-            print("Atraso médio (da geração à entrega bem-sucedida): {:.2f} ms".format(self.estatisticas['atrasoTotal'] * 1000.0 / self.estatisticas['pacotesRecebidos']))
+            print("Atraso médio (da geração à entrega bem-sucedida): {:.2f} ms".format(
+                self.estatisticas['atrasoTotal'] * 1000.0 / self.estatisticas['pacotesRecebidos']))
         else:
             print("Atraso médio (da geração à entrega bem-sucedida): N/A")
 
@@ -174,23 +179,30 @@ class Interface:
             # Pacote foi recebido sem colisão?
             if p.getEstado('colisao' + str(self.no.id)) != 1:
 
-                print("t = {0:.9f}, nó {1}: pacote no. {2} do nó {3} recebido".format(self.escalonador.getAgora(), self.no.id, p.getEstado('numeroDeSequencia'), p.getEstado('origem')))
+                print("t = {0:.9f}, nó {1}: pacote no. {2} do nó {3} recebido".format(self.escalonador.getAgora(),
+                                                                                      self.no.id,
+                                                                                      p.getEstado('numeroDeSequencia'),
+                                                                                      p.getEstado('origem')))
                 p.setEstado('statusDeRecepcao', 1)
 
                 # Anotar nas estatísticas
                 self.estatisticas['pacotesRecebidos'] = self.estatisticas['pacotesRecebidos'] + 1
                 self.estatisticas['tempoUtilTotal'] = self.estatisticas['tempoUtilTotal'] + p.getEstado('ttrans')
                 self.estatisticas['bytesRecebidos'] = self.estatisticas['bytesRecebidos'] + p.getEstado('tamanho')
-                self.estatisticas['atrasoTotal'] = self.estatisticas['atrasoTotal'] + (self.escalonador.getAgora() - p.getEstado('timestamp'))
+                self.estatisticas['atrasoTotal'] = self.estatisticas['atrasoTotal'] + (
+                            self.escalonador.getAgora() - p.getEstado('timestamp'))
             else:
-                print("t = {0:.9f}, nó {1}: pacote no. {2} do nó {3} sofreu colisao".format(self.escalonador.getAgora(), self.no.id, p.getEstado('numeroDeSequencia'), p.getEstado('origem')))
+                print("t = {0:.9f}, nó {1}: pacote no. {2} do nó {3} sofreu colisao".format(self.escalonador.getAgora(),
+                                                                                            self.no.id, p.getEstado(
+                        'numeroDeSequencia'), p.getEstado('origem')))
                 p.setEstado('statusDeRecepcao', 0)
 
                 # Anotar nas estatísticas
                 self.estatisticas['perdasPorColisao'] = self.estatisticas['perdasPorColisao'] + 1
 
             # Avisar à interface transmissora sobre o status da recepção.
-            self.escalonador.agendaEvento(self.escalonador.getAgora(), p.getEstado('interfaceTransmissora').transmitePacote, None)
+            self.escalonador.agendaEvento(self.escalonador.getAgora(),
+                                          p.getEstado('interfaceTransmissora').transmitePacote, None)
 
     # Adiciona um pacote ao final da fila de transmissão
     def enfileiraPacote(self, p):
@@ -207,7 +219,7 @@ class Interface:
                 self.fila.insert(0, p)
 
     # Método que lida com a transmissão de um pacote. Ele é chamado várias vezes
-    # ao longo desse processo (por exemplo, no início do processo, depois que a 
+    # ao longo desse processo (por exemplo, no início do processo, depois que a
     # tentativa de transmissão termina).
     def transmitePacote(self):
 
@@ -215,7 +227,7 @@ class Interface:
         # está sendo chamado porque a última tentiva de retransmissão terminou?
         statusDeRecepcao = self.pacoteAtual.getEstado('statusDeRecepcao')
 
-        #print "t = {0}: Executando transmitePacote no no {1} com n. de seq. {2} e statusDeRecepcao {3}".format(self.escalonador.getAgora(), self, self.pacoteAtual.getEstado('numeroDeSequencia'), statusDeRecepcao)
+        # print "t = {0}: Executando transmitePacote no no {1} com n. de seq. {2} e statusDeRecepcao {3}".format(self.escalonador.getAgora(), self, self.pacoteAtual.getEstado('numeroDeSequencia'), statusDeRecepcao)
 
         if statusDeRecepcao == None:
 
@@ -234,7 +246,6 @@ class Interface:
 
             # Há outros pacotes em fila?
             if len(self.fila) > 0:
-
                 # Sim. Iniciar a transmissão.
                 self.pacoteAtual = self.fila.pop()
                 self.transmitePacote()
@@ -257,15 +268,17 @@ class Interface:
     # em segundos).
     def MACExecutaBackoff(self, duracao):
 
-        print("t = {0:.9f}, nó {1}: Entrando em backoff por {2} segundos".format(self.escalonador.getAgora(), self.no.getId(), duracao))
+        print("t = {0:.9f}, nó {1}: Entrando em backoff por {2} segundos".format(self.escalonador.getAgora(),
+                                                                                 self.no.getId(), duracao))
         self.escalonador.agendaEvento(self.escalonador.getAgora() + duracao, self.MACFinalizaBackoff, self.pacoteAtual)
 
     # Método que pode ser chamado durante o processo de transmissão de um pacote para
-    # realizar uma tentativa de transmissão pelo meio físico. O parâmetro p indica o 
+    # realizar uma tentativa de transmissão pelo meio físico. O parâmetro p indica o
     # pacote a ser transmitido.
     def MACTransmitePacote(self, p):
 
-        print("t = {0:.9f}, nó {1}: Iniciando transmissão do pacote {2} pelo barramento".format(self.escalonador.getAgora(), self.no.getId(), self.pacoteAtual.getEstado('numeroDeSequencia')))
+        print("t = {0:.9f}, nó {1}: Iniciando transmissão do pacote {2} pelo barramento".format(
+            self.escalonador.getAgora(), self.no.getId(), self.pacoteAtual.getEstado('numeroDeSequencia')))
 
         # Colocar no pacote uma referência para essa interface para que o receptor
         # possa nos alertar se a recepção foi correta ou não.
@@ -273,7 +286,7 @@ class Interface:
 
         # Resetar o status de recepção a ser preenchido pelo receptor.
         self.pacoteAtual.setEstado('statusDeRecepcao', -1)
-        
+
         # Resetar o status de colisão do pacote em relação ao receptor
         self.pacoteAtual.setEstado('colisao' + str(self.pacoteAtual.getEstado('destino')), 0)
 
@@ -284,78 +297,82 @@ class Interface:
         # Passar o pacote para o meio de transmissão
         self.barramento.propagaSinal(self, self.pacoteAtual, ttrans)
 
-
     #####
     ##
-    # TODO: os quatro próximos métodos devem implementar a lógica do protocolo de 
+    # TODO: os quatro próximos métodos devem implementar a lógica do protocolo de
     # acesso ao meio. Nesse template, eles contém apenas código para imprimir os
-    # respectivos eventos na tela. A ideia é complementar cada um desses quatro métodos 
+    # respectivos eventos na tela. A ideia é complementar cada um desses quatro métodos
     # de forma a implementar o procedimento realizado pelo protocolo de acesso ao meio
-    # em cada uma das quatro situações. 
-    # 
-    # Para isso, esses quatro métodos devem fazer uso dos métodos auxiliares 
-    # MACTransmitePacote e MACExecutaBackoff, definidos acima. O primeiro realiza a 
+    # em cada uma das quatro situações.
+    #
+    # Para isso, esses quatro métodos devem fazer uso dos métodos auxiliares
+    # MACTransmitePacote e MACExecutaBackoff, definidos acima. O primeiro realiza a
     # transmissão do pacote pelo meio físico. Ao final dessa transmissão, dependendo
-    # do resultado (sucesso ou colisão), um dos dois métodos abaixo, 
-    # MACFinalizaTentativaDeTransmissaoMalSucedida ou 
+    # do resultado (sucesso ou colisão), um dos dois métodos abaixo,
+    # MACFinalizaTentativaDeTransmissaoMalSucedida ou
     # MACFinalizaTentativaDeTransmissaoBemSucedida, é chamado.
     # Já o o método MACExecutaBackoff faz com que a interface aguarde um tempo antes
     # de reavaliar se deve ou não acessar o meio. Após o tempo de backoff especificado,
     # o método MACFinalizaBackoff abaixo é chamado.
 
     # Método que é chamado quando o processo de transmissão de um pacote é iniciado.
-    # Ou seja, quando o pacote recém-chegado da camada de rede termina de ser preparado 
+    # Ou seja, quando o pacote recém-chegado da camada de rede termina de ser preparado
     # pela camada de enlace para transmissão. A lógica do protocolo de acesso ao meio
     # começa aqui.
     #
     # O único parâmetro do método, denominado p, é o pacote a ser transmitido.
     def MACInicializa(self, p):
 
-        print("t = {0:.9f}, nó {1}: Iniciando protocolo MAC para o pacote {2}".format(self.escalonador.getAgora(), self.no.getId(), self.pacoteAtual.getEstado('numeroDeSequencia')))
+        print("t = {0:.9f}, nó {1}: Iniciando protocolo MAC para o pacote {2}".format(self.escalonador.getAgora(),
+                                                                                      self.no.getId(),
+                                                                                      self.pacoteAtual.getEstado(
+                                                                                          'numeroDeSequencia')))
 
-        # Verifica o meio para saber se está livre, caso sim, transmita o pacote
-        if self.MACVerificaMeioLivre():
-            self.MACTransmitePacote(p)
-        # Do contrário inicia o backoff novamente
-        else:
-            self.MACExecutaBackoff(1 + random.randrange(MAXIMUM_BACKOFF_WINDOW))
+        self.MACTransmitePacote(p)
         pass
 
-    # Método que é chamado quando o último período de backoff realizado (iniciado 
-    # pelo método MACExecutaBackoff) é finalizado. Cabe a esse método decidir o que 
+    # Método que é chamado quando o último período de backoff realizado (iniciado
+    # pelo método MACExecutaBackoff) é finalizado. Cabe a esse método decidir o que
     # fazer a seguir (se alguma coisa).
     #
     # O único parâmetro do método, denominado p, é o pacote a ser transmitido.
     def MACFinalizaBackoff(self, p):
 
-        print("t = {0:.9f}, nó {1}: Finalizando período de backoff para o pacote {2}".format(self.escalonador.getAgora(), self.no.getId(), self.pacoteAtual.getEstado('numeroDeSequencia')))
+        print(
+            "t = {0:.9f}, nó {1}: Finalizando período de backoff para o pacote {2}".format(self.escalonador.getAgora(),
+                                                                                           self.no.getId(),
+                                                                                           self.pacoteAtual.getEstado(
+                                                                                               'numeroDeSequencia')))
 
         # TODO
         pass
 
-    # Método que é chamado quando a última tentativa de transmissão realizada (iniciada 
+    # Método que é chamado quando a última tentativa de transmissão realizada (iniciada
     # pelo método MACTransmitePacote) é finalizada com colisão. Cabe a esse
     # método decidir o que fazer a seguir (se alguma coisa).
     #
     # O único parâmetro do método, denominado p, é o pacote a ser transmitido.
     def MACFinalizaTentativaDeTransmissaoMalSucedida(self, p):
 
-        print("t = {0:.9f}, nó {1}: Finalizando tentativa de transmissao mal sucedida para o pacote {2}".format(self.escalonador.getAgora(), self.no.getId(), self.pacoteAtual.getEstado('numeroDeSequencia')))
+        print("t = {0:.9f}, nó {1}: Finalizando tentativa de transmissao mal sucedida para o pacote {2}".format(
+            self.escalonador.getAgora(), self.no.getId(), self.pacoteAtual.getEstado('numeroDeSequencia')))
 
-        # TODO
+        self.MACTransmitePacote(p)
         pass
 
-    # Método que é chamado quando a última tentativa de transmissão realizada (iniciada 
+    # Método que é chamado quando a última tentativa de transmissão realizada (iniciada
     # pelo método MACTransmitePacote) é finalizada com sucesso. Cabe a esse
     # método decidir o que fazer a seguir (se alguma coisa).
     #
     # O único parâmetro do método, denominado p, é o pacote a ser transmitido.
     def MACFinalizaTentativaDeTransmissaoBemSucedida(self, p):
 
-        print("t = {0:.9f}, nó {1}: Finalizando tentativa de transmissao bem sucedida para o pacote {2}".format(self.escalonador.getAgora(), self.no.getId(), self.pacoteAtual.getEstado('numeroDeSequencia')))
+        print("t = {0:.9f}, nó {1}: Finalizando tentativa de transmissao bem sucedida para o pacote {2}".format(
+            self.escalonador.getAgora(), self.no.getId(), self.pacoteAtual.getEstado('numeroDeSequencia')))
 
         # TODO
         pass
+
 
 # Classe meio de transmissão. Representa um barramento.
 class MeioTransmissao:
@@ -371,7 +388,7 @@ class MeioTransmissao:
         self.conectores = []
 
     # Conecta uma nova interface ao barramento, a uma distância especificada
-    # de uma das pontas do cabo. 
+    # de uma das pontas do cabo.
     def conectaInterface(self, interface, distancia):
 
         self.conectores.append((interface, distancia))
@@ -407,16 +424,19 @@ class MeioTransmissao:
                 tprop = -tprop
 
             # Escalonar o evento da chegada do sinal transmitido a essa interface
-            self.escalonador.agendaEvento(self.escalonador.getAgora() + tprop, interfaceReceptor.adicionaSinalRecebido, p)
+            self.escalonador.agendaEvento(self.escalonador.getAgora() + tprop, interfaceReceptor.adicionaSinalRecebido,
+                                          p)
 
             # Escalonar o evento da finalização do sinal transmitido a essa interface
-            self.escalonador.agendaEvento(self.escalonador.getAgora() + tprop + ttrans, interfaceReceptor.removeSinalRecebido, p)
+            self.escalonador.agendaEvento(self.escalonador.getAgora() + tprop + ttrans,
+                                          interfaceReceptor.removeSinalRecebido, p)
+
 
 # Classe nó (para gerar tráfego)
 class No:
 
-    def __init__(self, barramento, escalonador, id, intervaloEntrePacotes=1, destino=None, tamanhoDePacote=1500, taxaDeTransmissao=1e8):
-
+    def __init__(self, barramento, escalonador, id, intervaloEntrePacotes=1, destino=None, tamanhoDePacote=1500,
+                 taxaDeTransmissao=1e8):
         # Criar uma interface para o nó
         self.interface = Interface(self, barramento, escalonador, taxaDeTransmissao)
 
@@ -432,7 +452,7 @@ class No:
         # Intervalo entre pacotes gerados por esse nó em segundos
         self.intervaloEntrePacotes = intervaloEntrePacotes
 
-        # Destinatário dos pacotes gerados por esse nó. Um valor 'None' indica 
+        # Destinatário dos pacotes gerados por esse nó. Um valor 'None' indica
         # que esse nó não deverá transmitir pacotes.
         self.destino = destino
 
@@ -444,7 +464,6 @@ class No:
 
         # Temos um destinatário especificado?
         if self.destino != None:
-
             # Sortear um tempo aleatório até a geração do próximo pacote
             inter = random.expovariate(1.0 / self.intervaloEntrePacotes)
 
@@ -453,17 +472,14 @@ class No:
 
     # Retorna o id do nó
     def getId(self):
-
         return self.id
 
     # Retorna a interface do nó
     def getInterface(self):
-
         return self.interface
 
     # Método chamado toda vez que o nó gera um novo pacote.
     def geraPacote(self):
-
         # Criar um novo pacote
         p = Pacote()
         p.setEstado('origem', self.id)
@@ -484,10 +500,11 @@ class No:
         # Agendar geração do primeiro pacote
         self.escalonador.agendaEvento(self.escalonador.getAgora() + inter, self.geraPacote, None)
 
-def leArgumentos():
 
+def leArgumentos():
     # Criar um parser para as opções de linha de comando.
-    parser = argparse.ArgumentParser(description='Simulador de protocolo MAC.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description='Simulador de protocolo MAC.',
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('pos', type=float, default=[50, 0, 100], nargs='*',
                         help='posição do nó no barramento (m). Primeiro nó é o receptor.')
     parser.add_argument('-r', type=float, default=1e5,
@@ -503,9 +520,9 @@ def leArgumentos():
 
     return args
 
+
 # Função principal que encapsula execução
 def main():
-
     # Lê argumentos da linha de comando
     args = leArgumentos()
 
@@ -522,7 +539,7 @@ def main():
     # O nó 0 é o receptor; os demais são os transmissores.
     no = []
     for i in range(0, len(args.pos)):
-    
+
         if i == 0:
             no.append(No(barramento, escalonador, i, None))
         else:
@@ -537,6 +554,7 @@ def main():
     # Imprimir estatísticas do receptor
     print("\nEstatísticas do nó receptor:\n")
     no[0].getInterface().sumarizaEstatisticas()
+
 
 # Programa principal
 main()
