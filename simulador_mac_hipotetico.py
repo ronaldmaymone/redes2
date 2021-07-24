@@ -327,9 +327,7 @@ class Interface:
                                                                                       self.no.getId(),
                                                                                       self.pacoteAtual.getEstado(
                                                                                           'numeroDeSequencia')))
-
-        # TODO
-        pass
+        self.MACTransmitePacote(p)
 
     # Método que é chamado quando o último período de backoff realizado (iniciado
     # pelo método MACExecutaBackoff) é finalizado. Cabe a esse método decidir o que
@@ -344,9 +342,7 @@ class Interface:
                                                                                            self.no.getId(),
                                                                                            self.pacoteAtual.getEstado(
                                                                                                'numeroDeSequencia')))
-
-        # TODO
-        pass
+        self.MACTransmitePacote(p)
 
     # Método que é chamado quando a última tentativa de transmissão realizada (iniciada
     # pelo método MACTransmitePacote) é finalizada com colisão. Cabe a esse
@@ -360,8 +356,6 @@ class Interface:
         # Protocolo apenas retransmite caso haja colisão
         self.MACTransmitePacote(p)
 
-        # TODO
-        pass
 
     # Método que é chamado quando a última tentativa de transmissão realizada (iniciada
     # pelo método MACTransmitePacote) é finalizada com sucesso. Cabe a esse
