@@ -328,7 +328,7 @@ class Interface:
                                                                                       self.pacoteAtual.getEstado(
                                                                                           'numeroDeSequencia')))
 
-        self.MACTransmitePacote(p)
+        # TODO
         pass
 
     # Método que é chamado quando o último período de backoff realizado (iniciado
@@ -357,7 +357,7 @@ class Interface:
         print("t = {0:.9f}, nó {1}: Finalizando tentativa de transmissao mal sucedida para o pacote {2}".format(
             self.escalonador.getAgora(), self.no.getId(), self.pacoteAtual.getEstado('numeroDeSequencia')))
 
-        self.MACTransmitePacote(p)
+        # TODO
         pass
 
     # Método que é chamado quando a última tentativa de transmissão realizada (iniciada
