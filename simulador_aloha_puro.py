@@ -329,7 +329,7 @@ class Interface:
                                                                                       self.no.getId(),
                                                                                       self.pacoteAtual.getEstado(
                                                                                           'numeroDeSequencia')))
-        # TODO
+        self.MACTransmitePacote(p)
         pass
 
     # Método que é chamado quando o último período de backoff realizado (iniciado
