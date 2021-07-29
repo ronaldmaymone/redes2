@@ -367,7 +367,8 @@ class Interface:
         print("t = {0:.9f}, nó {1}: Finalizando tentativa de transmissao bem sucedida para o pacote {2}".format(
             self.escalonador.getAgora(), self.no.getId(), self.pacoteAtual.getEstado('numeroDeSequencia')))
 
-        # TODO
+        # Nada a ser feito nesse caso
+
         pass
 
 
